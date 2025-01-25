@@ -10,7 +10,7 @@
  *********************************************************************/
 
 import {FilesetResolver, LlmInference} from 'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-genai';
-import {storeFileInSWCache, restoreFileFromSWCache} from './model-caching';
+import {storeFileInSWCache, restoreFileFromSWCache} from './model-caching.js';
 
 /**************************************************************
  * DOM References and defaults
