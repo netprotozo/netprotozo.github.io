@@ -49,14 +49,14 @@ let activePersona = '';
 
 async function initLLM(modelUrl) {
   let genaiFileset, llm;
-  try {
+  //try {
     genaiFileset = await restoreFileFromSWCache('genai.fliesest');
-  } catch(e) {
+  //} catch(e) {
     genaiFileset = await FilesetResolver.forGenAiTasks(
       'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-genai/wasm');
     storeFileInSWCache(new Blob([genaiFileset]), 'genai.fliesest');
     console.log("genaiFileset: ", genaiFileset)
-  }
+ // }
 
   try {
     llm = await restoreFileFromSWCache('llm');
