@@ -55,6 +55,7 @@ async function initLLM(modelUrl) {
     genaiFileset = await FilesetResolver.forGenAiTasks(
       'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-genai/wasm');
     storeFileInSWCache(new Blob([genaiFileset]), 'genai.fliesest');
+    console.log("genaiFileset: ", genaiFileset)
   }
 
   try {
