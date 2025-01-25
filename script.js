@@ -10,6 +10,7 @@
  *********************************************************************/
 
 import {FilesetResolver, LlmInference} from 'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-genai';
+import {storeFileInSWCache, restoreFileFromSWCache} from './model-caching';
 
 /**************************************************************
  * DOM References and defaults
@@ -47,19 +48,29 @@ let lastGeneratedResponse = '';
 let activePersona = '';
 
 async function initLLM(modelUrl) {
-  const genaiFileset = await FilesetResolver.forGenAiTasks(
+  let genaiFileset, llm;
+  try {
+    genaiFileset = await restoreFileFromSWCache('genai.fliesest');
+  } catch(e) {
+    genaiFileset = await FilesetResolver.forGenAiTasks(
       'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-genai/wasm');
-  
-  let llm = await LlmInference.createFromOptions(genaiFileset, {
-    baseOptions: {
-      modelAssetPath: modelUrl
-    },
-    maxTokens: 8000,
-    topK: 1,
-    temperature: 0.01, // More deterministic and focused.
-    randomSeed: 64
-  });
-  //.createFromModelPath(genaiFileset, modelFileName)
+    storeFileInSWCache(new Blob([genaiFileset]), 'genai.fliesest');
+  }
+
+  try {
+    llm = await restoreFileFromSWCache('llm');
+  } catch(e) {
+    llm = await LlmInference.createFromOptions(genaiFileset, {
+      baseOptions: {
+        modelAssetPath: modelUrl
+      },
+      maxTokens: 8000,
+      topK: 1,
+      temperature: 0.01, // More deterministic and focused.
+      randomSeed: 64
+    });
+    storeFileInSWCache(new Blob([llm]), 'llm');
+  }
 
   llmInference = llm;
   PRELOADER.classList.remove('animate__fadeIn');
